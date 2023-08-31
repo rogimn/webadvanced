@@ -250,6 +250,7 @@ $prefix = '../';
                                 <input type="hidden" name="rand" id="rand_resgate" value="<?= md5(mt_rand()); ?>">
                                 <input type="hidden" name="idconta" id="idconta_resgate">
                                 <input type="hidden" name="tipo" id="tipo_resgate" value="redeem">
+                                <input type="hidden" name="limite" id="saldo_resgate">
                                 
                                 <dl>
                                     <dt class="data-investiment"></dt>
@@ -410,6 +411,10 @@ $prefix = '../';
                                 $('.div-load-page').addClass('d-none');
                                 
                                 if (data[0].status == false) {
+                                    $('.data-balance-deposit').html(new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format('0.00'));
+                                    $('.data-balance-profitable').html(new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format('0.00'));
+                                    $('.data-balance-total').html(new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format('0.00'));
+                                    $('#saldo_resgate').val('');
                                     $('.table-data').addClass('d-none');
                                     $('.dl-data').removeClass('d-none');
                                 } else {
@@ -468,6 +473,7 @@ $prefix = '../';
                                     $('.data-balance-deposit').html(new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(saldo));
                                     $('.data-balance-profitable').html(new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(rentabilizado));
                                     $('.data-balance-total').html(new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(total));
+                                    $('#saldo_resgate').val(saldo);
                                     $('.dl-data').addClass('d-none');
                                     $('.table-data tbody').html(response);                                    
                                 }
@@ -516,30 +522,39 @@ $prefix = '../';
 
                 $('.form-redeem').submit(function (e) {
                     e.preventDefault();
+                    
+                    // se o valor do resgate for maior do que está investido, retorna um aviso.
 
-                    $.post('<?= $prefix; ?>controllers/movimentacao/insert.php', $(this).serialize(), function (data) {
-                        $('.btn-redeem').html('<img src="<?= $prefix; ?>dist/img/rings.svg" class="loader-svg">').fadeTo(fade, 1);
+                    if (Number($('#valor_resgate').val()) > Number($('#saldo_resgate').val())) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'O valor não pode exceder o limite'
+                        });
+                    } else {
+                        $.post('<?= $prefix; ?>controllers/movimentacao/insert.php', $(this).serialize(), function (data) {
+                            $('.btn-redeem').html('<img src="<?= $prefix; ?>dist/img/rings.svg" class="loader-svg">').fadeTo(fade, 1);
 
-                        switch (data) {
-                            case 'true':
-                                Toast.fire({
-                                    icon: 'success',
-                                    title: 'Resgate realizado.'
-                                }).then((result) => {
-                                    window.setTimeout("location.href='inicio.php'", delay);
-                                });
-                                break;
+                            switch (data) {
+                                case 'true':
+                                    Toast.fire({
+                                        icon: 'success',
+                                        title: 'Resgate realizado.'
+                                    }).then((result) => {
+                                        window.setTimeout("location.href='inicio.php'", delay);
+                                    });
+                                    break;
 
-                            default:
-                                Toast.fire({
-                                    icon: 'error',
-                                    title: data
-                                });
-                                break;
-                        }
+                                default:
+                                    Toast.fire({
+                                        icon: 'error',
+                                        title: data
+                                    });
+                                    break;
+                            }
 
-                        $('.btn-redeem').html('Resgatar').fadeTo(fade, 1);
-                    });
+                            $('.btn-redeem').html('Resgatar').fadeTo(fade, 1);
+                        });
+                    }
 
                     return false;
                 });
