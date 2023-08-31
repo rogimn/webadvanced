@@ -1,0 +1,239 @@
+/*input:valid,
+textarea:valid {
+    background-color: #e9fee9;
+}
+
+input:invalid,
+textarea:invalid {
+    background-color: #fee9e9;
+}*/
+
+label {
+    display: inline-block;
+    margin-bottom: 0.1em !important;
+}
+
+.pl-dl {
+    padding-left: 1.3rem !important;
+}
+
+.div-load-page p {
+    margin: 0 0 0.8em;
+    color: #fff;
+}
+
+.p-cog-spin {
+    position: relative;
+    top: 0.5em;
+}
+
+.bg {
+    padding: 0.5em;
+}
+
+.loader-svg {
+    width: 18px;
+    position: relative;
+    bottom: 0.1em;
+}
+
+.p-divider {
+    padding-top: 2em;
+}
+
+.select2-container .select2-search--inline .select2-search__field {
+    height: 2em !important;
+}
+
+.select2-selection--single {
+    height: 2.8em !important;
+}
+
+.select2-selection__rendered {
+    padding-top: 0.3em !important;
+}
+
+.td-action {
+    text-align: center;
+}
+
+.td-action span {
+    margin-right: 0.4em;
+}
+
+.td-action span a {
+    color: #fff;
+}
+
+.bg-data {
+    margin-right: 0.3em;
+    border: 1px solid;
+}
+
+.bg-data a {
+    padding: 2px;
+}
+
+.bg-data:hover > .fa-pen:hover {
+    color: #ffc107;
+}
+
+.bg-data:hover > .fa-trash:hover {
+    color: #dc3545;
+}
+
+.page-load,
+.page-search {
+    position: fixed;
+    display: none;
+    z-index: 1000;
+    bottom: 0;
+    right: 0;
+    width: 94.8%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.div-search-close {
+    display: none;
+}
+
+.icon-search-close {
+    display: block;
+    margin-left: 0.5em;
+    cursor: pointer;
+    color: rgba(0, 0, 0, .5);
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.page-load .tb,
+.page-search .tb {
+    height: 100%;
+}
+
+.page-load .tb-cell,
+.page-search .tb-cell {
+    width: 90%;
+    margin: 7em auto;
+}
+
+.page-load .tb-cell img {
+    position: absolute;
+    bottom: 50%;
+    right: 50%;
+}
+
+.page-search .tb-cell form {
+    width: 90%;
+    max-width: 1280px;
+    margin: 5em auto;
+}
+
+.page-search .tb-cell input {
+    background: none;
+    border: 0;
+    border-bottom: 1px solid;
+    font-size: 2em;
+    padding: 0;
+    line-height: 2em;
+    height: auto;
+    width: 50%;
+    color: #262626;
+    letter-spacing: 0.05em;
+}
+
+.search-result {
+    position: relative;
+    right: 1.5em;
+}
+
+.col-search-data {
+    margin: 0 0 1em;
+    border-left: 0.3em solid #333;
+}
+
+.div-time {
+    display: -webkit-flex;
+    display: flex;
+    margin-bottom: 1.1em;
+}
+
+.div-time-left {
+    -webkit-flex: 1;
+    flex: 1;
+    padding: 5px;
+    background-color: #eee;
+}
+
+.div-time-left a {
+    position: relative;
+    top: 0.2em;
+}
+
+.div-time-center {
+    -webkit-flex: 10;
+    flex: 10;
+    padding: 5px;
+    background-color: #ddd;
+}
+
+.div-time-center p {
+    margin: 0;
+    padding: 0;
+}
+
+.div-time-center input {
+    cursor: pointer;
+}
+
+.div-time-right {
+    -webkit-flex: 1;
+    flex: 1;
+    padding: 5px;
+    background-color: #eee;
+}
+
+.div-time-right a {
+    position: relative;
+    top: 0.2em;
+}
+
+.custom-textarea-height {
+    height: 7.6em;
+}
+
+.form-icheck {
+    padding-right: 15px;
+}
+
+.brand-text {
+    position: relative;
+    bottom: 3px;
+}
+
+.badge-option {
+    padding: 0.5em;
+    vertical-align: text-top;
+}
+
+.swal2-title {
+    padding-left: 0.5em !important;
+}
+
+.a-usuario:hover mark {
+    background-color: #ccc;
+}
+
+/* active search form on navbar and active this code block
+
+@media only screen and (max-width: 550px) {
+    .nav-link mark span {
+        display: none;
+    }
+}*/
