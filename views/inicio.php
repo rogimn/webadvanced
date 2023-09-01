@@ -45,15 +45,8 @@ $prefix = '../';
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
         <!-- Font Awesome -->
         <link rel="stylesheet" href="<?= $prefix; ?>plugins/fontawesome-free/css/all.min.css">
-        <!-- DataTables -->
-        <link rel="stylesheet" href="<?= $prefix; ?>plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-        <link rel="stylesheet" href="<?= $prefix; ?>plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
         <!-- SweetAlert2 -->
         <link rel="stylesheet" href="<?= $prefix; ?>plugins/sweetalert2/sweetalert2.min.css">
-        <!-- Select Picker -->
-        <link rel="stylesheet" href="<?= $prefix; ?>plugins/bootstrap-select-1.13.14/css/bootstrap-select.min.css">
-        <!-- DatePicker -->
-        <link rel="stylesheet" href="<?= $prefix; ?>plugins/datepicker/css/datepicker.min.css">
         <!-- Theme style -->
         <link rel="stylesheet" href="<?= $prefix; ?>dist/css/adminlte.min.css">
         <!-- Custom -->
@@ -294,15 +287,8 @@ $prefix = '../';
         <script src="<?= $prefix; ?>plugins/jquery/jquery.min.js"></script>
         <!-- Bootstrap 4 -->
         <script src="<?= $prefix; ?>plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <!-- DataTables -->
-        <script src="<?= $prefix; ?>plugins/datatables/jquery.dataTables.min.js"></script>
-        <script src="<?= $prefix; ?>plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-        <script src="<?= $prefix; ?>plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-        <script src="<?= $prefix; ?>plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
         <!-- SweetAlert2 -->
         <script src="<?= $prefix; ?>plugins/sweetalert2/sweetalert2.min.js"></script>
-        <!-- Select Picker -->
-        <script src="<?= $prefix; ?>plugins/bootstrap-select-1.13.14/js/bootstrap-select.min.js"></script>
         <!-- Input Mask -->
         <script src="<?= $prefix; ?>plugins/inputmask/jquery.inputmask.min.js"></script>
         <!-- AdminLTE App -->
@@ -474,7 +460,7 @@ $prefix = '../';
                                     $('.data-balance-deposit').html(new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(saldo));
                                     $('.data-balance-profitable').html(new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(rentabilizado));
                                     $('.data-balance-total').html(new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(total));
-                                    $('#saldo_resgate').val(saldo);
+                                    $('#saldo_resgate').val(total);
                                     $('.dl-data').addClass('d-none');
                                     $('.table-data tbody').html(response);                                    
                                 }
@@ -529,7 +515,7 @@ $prefix = '../';
                     if (Number($('#valor_resgate').val()) > Number($('#saldo_resgate').val())) {
                         Toast.fire({
                             icon: 'error',
-                            title: 'O valor não pode exceder o limite'
+                            title: 'O valor não pode exceder o limite.'
                         });
                     } else {
                         $.post('<?= $prefix; ?>controllers/movimentacao/insert.php', $(this).serialize(), function (data) {

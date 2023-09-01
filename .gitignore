@@ -1,3 +1,10 @@
 .DS_Store
 .vscode
 .htaccess
+appInstallDone.php
+404.php
+500.php
+components/loadCEP.php
+components/loadCNPJ.php
+db/modeloLogico.mwb
+db/modeloLogico.mwb.bak
