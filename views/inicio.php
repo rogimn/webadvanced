@@ -467,7 +467,8 @@ $prefix = '../';
 
                                     calc1 = rendimento / tempo_resgate;
                                     calc2 = calc1 * diffInDays;
-                                    rentabilizado = saldo * calc2;
+                                    calc3 = calc2 / 100;
+                                    rentabilizado = saldo * calc3;
                                     total = saldo + rentabilizado;
 
                                     $('.data-balance-deposit').html(new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(saldo));
