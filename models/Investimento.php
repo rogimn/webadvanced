@@ -23,7 +23,7 @@ class Investimento
 
     public function readAll()
     {
-        $sql = $this->conn->prepare("SELECT idinvestimento,tipo,tempo_resgate,rendimento FROM view_select_investimentos ORDER BY tipo,tempo_resgate,rendimento");
+        $sql = $this->conn->prepare("SELECT idinvestimento,tipo,tempo_resgate,rendimento,valor_minimo,valor_maximo FROM vw_investimentos ORDER BY tipo,tempo_resgate,rendimento");
         $sql->execute();
 
         return $sql;

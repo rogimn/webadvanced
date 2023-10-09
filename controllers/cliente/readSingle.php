@@ -44,11 +44,16 @@ if ($sql = $cliente->readSingle()) {
             'documento' => $documento,
             'idconta' => $idconta,
             'conta' => $numero,
-            'saldo' => 'R$'.number_format($saldo, 2, '.', ','),
+            //'saldo_check' => $saldo,
+            'monitor' => $monitor,
             'idinvestimento' => $idinvestimento,
             'investimento' => $tipo,
             'tempo_resgate' => $tempo_resgate,
-            'rendimento' => $rendimento
+            'rendimento' => $rendimento,
+            'valor_minimo' => 'R$'.number_format($valor_minimo, 2, '.', ','),
+            'valor_maximo' => 'R$'.number_format($valor_maximo, 2, '.', ','),
+            'valor_minimo_session' => $valor_minimo,
+            'valor_maximo_session' => $valor_maximo
         );
 
         array_push($cliente_arr['cliente'], $cliente_item);

@@ -10,6 +10,7 @@ class Cliente
     public $idcliente;
     public $nome;
     public $documento;
+    public $nascimento;
     public $usuario;
     public $senha;
     public $email;
@@ -25,7 +26,7 @@ class Cliente
 
     public function clientInsertExist()
     {
-        $sql = $this->conn->prepare("SELECT idcliente FROM view_select_clientes WHERE documento = :documento");
+        $sql = $this->conn->prepare("SELECT idcliente FROM vw_clientes WHERE documento = :documento");
         $sql->bindParam(':documento', $this->documento, PDO::PARAM_STR);
         $sql->execute();
 
@@ -42,7 +43,7 @@ class Cliente
     {
         if (strlen($this->documento) != 0) {
             #$sql = $this->conn->prepare("SELECT idcliente FROM cliente WHERE documento = :documento AND idcliente <> :idcliente");
-            $sql = $this->conn->prepare("SELECT idcliente FROM view_select_cliente WHERE documento = :documento AND idcliente <> :idcliente");
+            $sql = $this->conn->prepare("SELECT idcliente FROM vw_clientes WHERE documento = :documento AND idcliente <> :idcliente");
             $sql->bindParam(':documento', $this->documento, PDO::PARAM_STR);
             $sql->bindParam(':idcliente', $this->idcliente, PDO::PARAM_INT);
             $sql->execute();
@@ -54,7 +55,7 @@ class Cliente
             }
         } else {
             #$sql = $this->conn->prepare("SELECT idcliente FROM cliente WHERE nome = :nome AND idcliente <> :idcliente");
-            $sql = $this->conn->prepare("SELECT idcliente FROM view_select_cliente WHERE nome = :nome AND idcliente <> :idcliente");
+            $sql = $this->conn->prepare("SELECT idcliente FROM vw_clientes WHERE nome = :nome AND idcliente <> :idcliente");
             $sql->bindParam(':nome', $this->nome, PDO::PARAM_STR);
             $sql->bindParam(':idcliente', $this->idcliente, PDO::PARAM_INT);
             $sql->execute();
@@ -82,7 +83,7 @@ class Cliente
     /*public function readAll()
     {
         #$sql = $this->conn->prepare("SELECT idcliente,tipo,documento,nome,cep,endereco,bairro,cidade,uf,telefone,celular,email,observacao,monitor FROM cliente WHERE monitor = :monitor ORDER BY nome,tipo,email,endereco");
-        $sql = $this->conn->prepare("SELECT idcliente,documento,nome,celular FROM view_select_cliente WHERE monitor = :monitor ORDER BY tipo,nome,cep,endereco,bairro,cidade,uf,email");
+        $sql = $this->conn->prepare("SELECT idcliente,documento,nome,celular FROM vw_clientes WHERE monitor = :monitor ORDER BY tipo,nome,cep,endereco,bairro,cidade,uf,email");
         $sql->bindParam(':monitor', $this->monitor, PDO::PARAM_BOOL);
         $sql->execute();
 
@@ -93,8 +94,8 @@ class Cliente
 
     public function readSingle()
     {
-        #$sql = $this->conn->prepare("SELECT idcliente,nome,documento FROM view_select_clientes WHERE idcliente = :idcliente");
-        $sql = $this->conn->prepare("SELECT clientes.idcliente,clientes.nome,clientes.documento,contas.idconta,contas.numero,contas.saldo,investimentos.idinvestimento,investimentos.tipo,investimentos.tempo_resgate,investimentos.rendimento FROM clientes INNER JOIN contas ON contas.clientes_idcliente = clientes.idcliente INNER JOIN investimentos ON contas.investimentos_idinvestimento = investimentos.idinvestimento WHERE clientes.idcliente = :idcliente");
+        #$sql = $this->conn->prepare("SELECT idcliente,nome,documento FROM vw_clientess WHERE idcliente = :idcliente");
+        $sql = $this->conn->prepare("SELECT clientes.idcliente,clientes.nome,clientes.documento,clientes.nascimento,contas.idconta,contas.numero,contas.saldo,contas.monitor,investimentos.idinvestimento,investimentos.tipo,investimentos.tempo_resgate,investimentos.rendimento,investimentos.valor_minimo,investimentos.valor_maximo FROM clientes INNER JOIN contas ON contas.clientes_idcliente = clientes.idcliente INNER JOIN investimentos ON contas.investimentos_idinvestimento = investimentos.idinvestimento WHERE clientes.idcliente = :idcliente");
         $sql->bindParam(':idcliente', $this->idcliente, PDO::PARAM_INT);
         $sql->execute();
 
@@ -108,9 +109,10 @@ class Cliente
         if ($this->clientInsertExist()) {
             die('Esse cliente j&aacute; est&aacute; cadastrado.');
         } else {
-            $sql = $this->conn->prepare("INSERT INTO clientes (nome,documento,usuario,senha,email) VALUES (:nome,:documento,:usuario,:senha,:email)");
+            $sql = $this->conn->prepare("INSERT INTO clientes (nome,documento,nascimento,usuario,senha,email) VALUES (:nome,:documento,:nascimento,:usuario,:senha,:email)");
             $sql->bindParam(':nome', $this->nome, PDO::PARAM_STR);
             $sql->bindParam(':documento', $this->documento, PDO::PARAM_STR);
+            $sql->bindParam(':nascimento', $this->nascimento, PDO::PARAM_STR);
             $sql->bindParam(':usuario', $this->usuario, PDO::PARAM_STR);
             $sql->bindParam(':senha', $this->senha, PDO::PARAM_STR);
             $sql->bindParam(':email', $this->email, PDO::PARAM_STR);
@@ -128,7 +130,7 @@ class Cliente
         if ($this->clientUpdateExist()) {
             die('Esse cliente j&aacute; est&aacute; cadastrado.');
         } else {
-            #$sql = $this->conn->prepare("UPDATE cliente SET tipo = :tipo, documento = :documento, nome = :nome, cep = :cep, endereco = :endereco, bairro = :bairro, cidade = :cidade, uf = :uf, telefone = :telefone, celular = :celular, email = :email, observacao = :observacao WHERE idcliente = :idcliente");
+            #$sql = $this->conn->prepare("UPDATE clientes SET tipo = :tipo, documento = :documento, nome = :nome, cep = :cep, endereco = :endereco, bairro = :bairro, cidade = :cidade, uf = :uf, telefone = :telefone, celular = :celular, email = :email, observacao = :observacao WHERE idcliente = :idcliente");
             $sql = $this->conn->prepare("CALL procedure_update_cliente(:tipo,:documento,:nome,:cep,:endereco,:bairro,:cidade,:uf,:telefone,:celular,:email,:observacao,:idcliente)");
             $sql->bindParam(':tipo', $this->tipo, PDO::PARAM_BOOL);
             $sql->bindParam(':documento', $this->documento, PDO::PARAM_STR);

@@ -17,24 +17,37 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+-- DDL
 
 CREATE TABLE `clientes` (
-  `idcliente` int(11) NOT NULL AUTO_INCREMENT,
-  `nome` varchar(200) NOT NULL,
-  `documento` varchar(18) NOT NULL,
-  `usuario` varchar(45) NOT NULL,
-  `senha` varchar(45) NOT NULL,
-  `email` varchar(100) NOT NULL,
+  `idcliente` INT(11) NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(200) NOT NULL,
+  `documento` VARCHAR(18) NOT NULL,
+  `nascimento` DATE NOT NULL,
+  `usuario` VARCHAR(45) NOT NULL,
+  `senha` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`idcliente`),
   UNIQUE KEY `documento_UNIQUE` (`documento`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE `investimentos` (
+  `idinvestimento` INT(11) NOT NULL AUTO_INCREMENT,
+  `tipo` VARCHAR(20) NOT NULL,
+  `tempo_resgate` INT(11) NOT NULL,
+  `rendimento` INT(11) NOT NULL,
+  `valor_minimo` DECIMAL(19,4) NOT NULL,
+  `valor_maximo` DECIMAL(19,4) NOT NULL,
+  PRIMARY KEY (`idinvestimento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 CREATE TABLE `contas` (
-  `idconta` int(11) NOT NULL AUTO_INCREMENT,
-  `clientes_idcliente` int(11) NOT NULL,
-  `investimentos_idinvestimento` int(11) NOT NULL,
-  `numero` varchar(10) NOT NULL,
-  `saldo` decimal(19,4) NOT NULL,
+  `idconta` INT(11) NOT NULL AUTO_INCREMENT,
+  `clientes_idcliente` INT(11) NOT NULL,
+  `investimentos_idinvestimento` INT(11) NOT NULL,
+  `numero` VARCHAR(10) NOT NULL,
+  `saldo` DECIMAL(19,4) NOT NULL,
+  `monitor` TINYINT(1) NOT NULL,
   PRIMARY KEY (`idconta`),
   UNIQUE KEY `numero_UNIQUE` (`numero`),
   KEY `fk_contas_clientes_idx` (`clientes_idcliente`),
@@ -43,32 +56,31 @@ CREATE TABLE `contas` (
   CONSTRAINT `fk_contas_investimentos1` FOREIGN KEY (`investimentos_idinvestimento`) REFERENCES `investimentos` (`idinvestimento`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE `investimentos` (
-  `idinvestimento` int(11) NOT NULL AUTO_INCREMENT,
-  `tipo` varchar(20) NOT NULL,
-  `tempo_resgate` int(11) NOT NULL,
-  `rendimento` int(11) NOT NULL,
-  PRIMARY KEY (`idinvestimento`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 CREATE TABLE `movimentacoes` (
-  `idmovimentacao` int(11) NOT NULL AUTO_INCREMENT,
-  `contas_idconta` int(11) NOT NULL,
-  `tipo` varchar(20) NOT NULL,
-  `datado` datetime NOT NULL,
-  `valor` decimal(19,4) NOT NULL,
+  `idmovimentacao` INT(11) NOT NULL AUTO_INCREMENT,
+  `contas_idconta` INT(11) NOT NULL,
+  `tipo` VARCHAR(20) NOT NULL,
+  `datado` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `valor` DECIMAL(19,4) NOT NULL,
   PRIMARY KEY (`idmovimentacao`,`contas_idconta`),
   KEY `fk_movimentacoes_contas1_idx` (`contas_idconta`),
   CONSTRAINT `fk_movimentacoes_contas1` FOREIGN KEY (`contas_idconta`) REFERENCES `contas` (`idconta`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO investimentos (tipo, tempo_resgate, rendimento)
-VALUES
-('Tesouro Pré-Fixado', 60, 102),
-('Tesouro Selic', 120, 105),
-('Tesouro IPCA+', 180, 108),
-('CDB & LC', 210, 111),
-('LCI & LCA', 240, 115);
+-- INSERT
+
+INSERT INTO investimentos (tipo, tempo_resgate, rendimento, valor_minimo, valor_maximo) VALUES ('Tesouro Pré-Fixado', 60, 102, '100.00', '100000.00');
+INSERT INTO investimentos (tipo, tempo_resgate, rendimento, valor_minimo, valor_maximo) VALUES ('Tesouro Selic', 120, 105, '150.00', '150000.00');
+INSERT INTO investimentos (tipo, tempo_resgate, rendimento, valor_minimo, valor_maximo) VALUES ('Tesouro IPCA+', 180, 108, '200.00', '200000.00');
+INSERT INTO investimentos (tipo, tempo_resgate, rendimento, valor_minimo, valor_maximo) VALUES ('CDB & LC', 210, 111, '250.00', '250000.00');
+INSERT INTO investimentos (tipo, tempo_resgate, rendimento, valor_minimo, valor_maximo) VALUES ('LCI & LCA', 240, 115, '300.00', '300000.00');
+
+-- VIEWS
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_clientes` AS select `clientes`.`idcliente` AS `idcliente`,`clientes`.`nome` AS `nome`,`clientes`.`documento` AS `documento`,`clientes`.`nascimento` AS `nascimento`,`clientes`.`usuario` AS `usuario`,`clientes`.`senha` AS `senha`,`clientes`.`email` AS `email` from `clientes`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_contas` AS select `contas`.`idconta` AS `idconta`,`contas`.`clientes_idcliente` AS `clientes_idcliente`,`contas`.`investimentos_idinvestimento` AS `investimentos_idinvestimento`,`contas`.`numero` AS `numero`,`contas`.`saldo` AS `saldo`,`contas`.`monitor` AS `monitor` from `contas`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_investimentos` AS select `investimentos`.`idinvestimento` AS `idinvestimento`,`investimentos`.`tipo` AS `tipo`,`investimentos`.`tempo_resgate` AS `tempo_resgate`,`investimentos`.`rendimento` AS `rendimento`,`investimentos`.`valor_minimo` AS `valor_minimo`,`investimentos`.`valor_maximo` AS `valor_maximo` from `investimentos`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_movimentacoes` AS select `movimentacoes`.`idmovimentacao` AS `idmovimentacao`,`movimentacoes`.`contas_idconta` AS `contas_idconta`,`movimentacoes`.`tipo` AS `tipo`,`movimentacoes`.`datado` AS `datado`,`movimentacoes`.`valor` AS `valor` from `movimentacoes`;
 
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

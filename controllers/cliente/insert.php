@@ -45,6 +45,38 @@ if (empty($_POST['documento'])) {
     $cliente->documento = $_POST['documento'];
 }
 
+if (empty($_POST['nascimento'])) {
+    die($cfg['input_required']);
+} else {
+    $filtro++;
+    $_POST['nascimento'] = filter_input(INPUT_POST, 'nascimento', FILTER_SANITIZE_STRING);
+    
+    // invertendo para o formato do banco: yyyy/mm/dd
+    
+    $dia = substr($_POST['nascimento'], 0, 2);
+    $mes = substr($_POST['nascimento'], 3, 2);
+    $ano = substr($_POST['nascimento'], 6);
+    $nascimento = $ano . '-' . $mes . '-' . $dia;
+
+    // calculando o intervalo de datas
+
+    $d1 = new DateTime('now');
+    $d2 = new DateTime($nascimento);
+    $intervalo = $d1->diff( $d2 );
+
+    #echo "Diferença de " . $intervalo->d . " dias";
+    #echo " e " . $intervalo->m . " mese s";
+    #echo " e " . $intervalo->y . " anos.";
+
+    // verifica se tem 18 anos ou mais
+
+    if ($intervalo->y >= 18) {
+        $cliente->nascimento = $nascimento;
+    } else {
+        die($cfg['error']['age_min']);
+    }
+}
+
 if (empty($_POST['usuario'])) {
     die($cfg['input_required']);
 } else {
@@ -82,12 +114,13 @@ if (empty($_POST['investimento'])) {
     $conta->idinvestimento = $_POST['investimento'];
 }
 
-if ($filtro == 6) {
+if ($filtro == 7) {
     if ($conta->idcliente = $cliente->insert()) {
         // Se o cliente for cadastrado, o último ID é passado para a variável $idcliente
         // Tendo isso, abre-se a conta do cliente
 
         $conta->saldo = '0.00';
+        $conta->monitor = 0;
 
         if ($conta->insert()) {
             echo 'true';
@@ -99,4 +132,4 @@ if ($filtro == 6) {
     die($cfg['var_required']);
 }
 
-unset($cfg, $database, $db, $cliente, $conta, $idcliente, $filtro);
+unset($cfg, $database, $db, $cliente, $conta, $idcliente, $filtro, $dia, $mes, $ano, $nascimento, $d1, $d2, $intervalo);

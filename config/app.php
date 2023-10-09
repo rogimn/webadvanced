@@ -34,6 +34,11 @@ $cfg = [
     'var_required' => 'Vari&aacute;vel de controle nula.',
     'invalid_email' => 'O formato do e-mail &eacute; inv&aacute;lido.',
     'no_encrypt_access' => 'N&atilde;o foi poss&iacute;vel criptografar o acesso.',
+    'error' => [
+        'age_min' => 'O cliente precisa ter 18 anos ou mais.',
+        'val_min' => 'O dep&oacute;sito excede o valor m&iacute;nimo.',
+        'val_max' => 'O valor aplicado excede o valor m&aacute;nimo.'
+    ],
     'msg_empty_table' => [
         'dt' => 'Nada encontrado.',
         'dd' => 'Nenhum registro cadastrado.'

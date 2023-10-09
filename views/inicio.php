@@ -107,6 +107,7 @@ $prefix = '../';
                                             <div class="description-block">
                                                 <h5 class="description-header data-investiment"></h5>
                                                 <h5 class="description-header data-investiment-more"></h5>
+                                                <h5 class="description-header data-investiment-values"></h5>
                                                 <span class="description-text text-uppercase">investimento</span>
                                             </div>
                                         </div>
@@ -162,8 +163,8 @@ $prefix = '../';
                                 </div>
 
                                 <div class="card-footer clearfix">
-                                    <a href="javascript:void(0)" class="btn btn-sm btn-primary float-left" data-toggle="modal" data-target="#modal-deposit">Depositar</a>
-                                    <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right" data-toggle="modal" data-target="#modal-redeem">Resgatar</a>
+                                    <a href="#" class="btn btn-sm btn-primary btn-deposit float-left" data-toggle="modal" data-target="#modal-deposit">Depositar</a>
+                                    <a href="#" class="btn btn-sm btn-secondary btn-redeem float-right disabled" data-toggle="modal" data-target="#modal-redeem">Resgatar</a>
                                 </div>
                             </div>
                             <!-- /.card -->
@@ -185,7 +186,7 @@ $prefix = '../';
                                 <h4 class="modal-title">
                                     <span>Novo dep&oacute;sito</span>
                                 </h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <button type="button" class="close btn-deposit-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -193,10 +194,13 @@ $prefix = '../';
                                 <input type="hidden" name="rand" id="rand_deposito" value="<?= md5(mt_rand()); ?>">
                                 <input type="hidden" name="idconta" id="idconta_deposito">
                                 <input type="hidden" name="tipo" id="tipo_deposito" value="deposit">
+                                <input type="hidden" name="saldo" id="saldo_check">
+                                <input type="hidden" name="monitor_conta" id="monitor_conta_deposit" value="true">
                                 
                                 <dl>
                                     <dt class="data-investiment"></dt>
                                     <dd class="data-investiment-more"></dd>
+                                    <dd class="data-investiment-values"></dd>
                                 </dl>
 
                                 <hr>
@@ -214,12 +218,12 @@ $prefix = '../';
                                         <label class="text" for="valor">Valor</label>
                                     </div>
                                     <div class="col-9">
-                                        <input type="text" name="valor" id="valor_deposito" maxlength="20" class="form-control col-6" title="Valor do dep&oacute;sito" placeholder="Valor do dep&oacute;sito" required>
+                                        <input type="text" name="valor_deposito" id="valor_deposito" maxlength="20" class="form-control col-6" title="Valor do dep&oacute;sito" placeholder="Valor do dep&oacute;sito" required>
                                     </div>
                                 </div>
                             </div>
                             <div class="modal-footer justify-content-between">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                                <button type="button" class="btn btn-default btn-deposit-close" data-dismiss="modal">Fechar</button>
                                 <button type="submit" class="btn btn-primary btn-deposit">Depositar</button>
                             </div>
                         </form>
@@ -244,10 +248,13 @@ $prefix = '../';
                                 <input type="hidden" name="idconta" id="idconta_resgate">
                                 <input type="hidden" name="tipo" id="tipo_resgate" value="redeem">
                                 <input type="hidden" name="limite" id="saldo_resgate">
+                                <input type="hidden" name="valor_resgate" id="valor_resgate">
+                                <input type="hidden" name="monitor_conta" id="monitor_conta_redeem" value="false">
                                 
                                 <dl>
                                     <dt class="data-investiment"></dt>
                                     <dd class="data-investiment-more"></dd>
+                                    <dd class="data-investiment-values"></dd>
                                 </dl>
 
                                 <hr>
@@ -260,18 +267,20 @@ $prefix = '../';
                                         <code><?= date('d/m/Y H:m:s') . 'h'; ?></code>
                                     </div>
                                 </div>
+
                                 <div class="row form-group g-3 align-items-center">
                                     <div class="col-3">
-                                        <label class="text" for="valor">Valor</label>
+                                        <label class="text" for="valor">Valor:</label>
                                     </div>
                                     <div class="col-9">
-                                        <input type="text" name="valor" id="valor_resgate" maxlength="20" class="form-control col-6" title="Valor do resgate" placeholder="Valor do resgate" required>
+                                        <!--<input type="text" name="valor" id="valor_resgate" maxlength="20" class="form-control col-6" title="Valor do resgate" placeholder="Valor do resgate" required>-->
+                                        <code class="redeem-balance"></code>
                                     </div>
                                 </div>
                             </div>
                             <div class="modal-footer justify-content-between">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                                <button type="submit" class="btn btn-secondary btn-redeem">Resgatar</button>
+                                <button type="submit" class="btn btn-secondary btn-redeem disabled">Resgatar</button>
                             </div>
                         </form>
                     </div>
@@ -348,11 +357,22 @@ $prefix = '../';
                             if (data[0]) {
                                 $('.div-load-page').addClass('d-none');
 
+                                // se não existir saldo, força o primeiro depósito
+                                // usado para forçar o usuário recém criado realizar um depósito
+
+                                //if (data[0].saldo_check == 0.0000) {
+                                if (data[0].monitor == 0) {
+                                    $('#modal-deposit').modal({backdrop: 'static', keyboard: false, show: true});
+                                    $(".btn-deposit-close").addClass("invisible");
+                                }
+
                                 // o tempo de resgate e o rendimento serão passados para sessions
                                 // porque será utilizado no cálculo dos rendimentos na função pullDataMovimentacao()
 
                                 sessionStorage.setItem('rendimento', data[0].rendimento);
                                 sessionStorage.setItem('tempo_resgate', data[0].tempo_resgate);
+                                sessionStorage.setItem('valor_minimo', data[0].valor_minimo);
+                                sessionStorage.setItem('valor_maximo_session', data[0].valor_maximo_session);
 
                                 if (data[0].status == true) {
                                     $('.data-name').html(data[0].nome);
@@ -362,6 +382,7 @@ $prefix = '../';
                                     $('.data-account').html(data[0].conta);
                                     $('.data-investiment').html(data[0].investimento);
                                     $('.data-investiment-more').html(data[0].tempo_resgate + ' dias &#45; ' + data[0].rendimento + '%');
+                                    $('.data-investiment-values').html('M&iacute;nimo: ' + data[0].valor_minimo + ' <br> M&aacute;ximo: ' + data[0].valor_maximo);
                                 } else {
                                     $('.data-name').html('&#45;');
                                     $('.data-document').html('&#45;');
@@ -400,20 +421,24 @@ $prefix = '../';
                                     $('.data-balance-deposit').html(new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format('0.00'));
                                     $('.data-balance-profitable').html(new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format('0.00'));
                                     $('.data-balance-total').html(new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format('0.00'));
+                                    $('#saldo_check').val(0);
                                     $('#saldo_resgate').val('');
                                     $('.table-data').addClass('d-none');
                                     $('.dl-data').removeClass('d-none');
                                 } else {
                                     let response = '',
-                                        dataAtual, dia, mes, $ano,
+                                        idmovimentacao,
+                                        dataAtual = new Date(), dataRedeem0 = new Date(), dataRedeem1,
+                                        dia, mes, ano,
                                         diffInMs, diffInDays,
                                         saldo = 0,
                                         rendimento = sessionStorage.getItem('rendimento'),
-                                        tempo_resgate = sessionStorage.getItem('tempo_resgate');
+                                        tempo_resgate = parseInt(sessionStorage.getItem('tempo_resgate')),
+                                        valor_minimo = sessionStorage.getItem('valor_minimo'),
+                                        valor_maximo_session = sessionStorage.getItem('valor_maximo_session');
 
                                     // obtendo a data atual no formato yyyy-mm-dd
 
-                                    dataAtual = new Date();
                                     dia = String(dataAtual.getDate()).padStart(2, '0');
                                     mes = String(dataAtual.getMonth() + 1).padStart(2, '0');
                                     ano = dataAtual.getFullYear();
@@ -428,6 +453,13 @@ $prefix = '../';
                                         data[i].valor = Number(data[i].valor);
 
                                         if (data[i].tipo == 1) {
+                                            if (i == 0) {
+                                                //console.log(data[i].idmovimentacao + ' ' + data[i].datado_calculo_redeem);
+                                                idmovimentacao = data[i].idmovimentacao;
+                                                dataRedeem1 = new Date(data[i].datado_calculo_redeem);
+                                                //console.log(dataRedeem);
+                                            }
+
                                             response += '<tr>'
                                             + '<td><span class="badge badge-success">Entrada</span></td>'
                                             + '<td>' + data[i].datado + '</td>'
@@ -460,9 +492,43 @@ $prefix = '../';
                                     $('.data-balance-deposit').html(new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(saldo));
                                     $('.data-balance-profitable').html(new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(rentabilizado));
                                     $('.data-balance-total').html(new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(total));
+                                    $('#saldo_check').val(saldo);
                                     $('#saldo_resgate').val(total);
                                     $('.dl-data').addClass('d-none');
-                                    $('.table-data tbody').html(response);                                    
+                                    $('.table-data tbody').html(response);
+                                    
+                                    // verifica se o total de depósitos chegou no valor máximo
+
+                                    saldo = new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(saldo);
+                                    valor_maximo_session = new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(valor_maximo_session);
+                                    //console.log(typeof(saldo) + ' ' + typeof(valor_maximo_session));
+
+                                    if (saldo === valor_maximo_session) {
+                                        $('.btn-deposit').addClass('disabled');
+                                    }
+
+                                    // calculando a data de resgate
+
+                                    dataRedeem1.setDate(dataRedeem1.getDate() + tempo_resgate);
+                                    
+                                    yearRedeem0 = dataRedeem0.getFullYear();
+                                    monthRedeem0 = dataRedeem0.getMonth();
+                                    dayRedeem0 = dataRedeem0.getDay();
+                                    dataRedeem0 = yearRedeem0.toString() + monthRedeem0.toString() + dayRedeem0.toString();
+
+                                    yearRedeem1 = dataRedeem1.getFullYear();
+                                    monthRedeem1 = dataRedeem1.getMonth();
+                                    dayRedeem1 = dataRedeem1.getDay();
+                                    dataRedeem1 = yearRedeem1.toString() + monthRedeem1.toString() + dayRedeem1.toString();
+
+                                    //console.log(dataRedeem0 + ' ' + dataRedeem1);
+
+                                    if (dataRedeem0 === dataRedeem1) {
+                                        $('.redeem-balance').html(new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(total));
+                                        $('#valor_resgate').val(total);
+                                        $('.btn-deposit').addClass('disabled');
+                                        $('.btn-redeem').removeClass('disabled');
+                                    }
                                 }
                             }
                         },

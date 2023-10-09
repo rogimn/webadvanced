@@ -24,7 +24,7 @@ class Movimentacao
 
     public function depositInsertExist()
     {
-        $sql = $this->conn->prepare("SELECT idmovimentacao FROM view_select_movimentacoes WHERE datado = :datado");
+        $sql = $this->conn->prepare("SELECT idmovimentacao FROM vw_movimentacoes WHERE datado = :datado");
         $sql->bindParam(':datado', $this->datado, PDO::PARAM_STR);
         $sql->execute();
 

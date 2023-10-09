@@ -45,6 +45,8 @@ if ($sql->rowCount() > 0) {
         $hora = substr($datado, 11, 8);
         $datado = $dia . '/' . $mes . '/' . $ano . ' &#45; ' . $hora . 'h';
         $datado_calculo = $ano .'-'. $mes .'-'. $dia;
+        #$datado_calculo_redeem = $ano .', '. ($mes - 1) .', '. $dia;
+        $datado_calculo_redeem = $ano .', '. $mes .', '. $dia;
 
         $movimentacao_item = array(
             'status' => true,
@@ -52,6 +54,7 @@ if ($sql->rowCount() > 0) {
             'tipo' => $tipo,
             'datado' => $datado,
             'datado_calculo' => $datado_calculo,
+            'datado_calculo_redeem' => $datado_calculo_redeem,
             'valor' => $valor
         );
 
@@ -69,4 +72,4 @@ if ($sql->rowCount() > 0) {
     echo json_encode($movimentacao_arr['movimentacao']);
 }
 
-unset($cfg, $database, $db, $movimentacao, $sql, $row, $movimentacao_arr, $movimentacao_item, $ano, $mes, $dia, $idmovimentacao, $tipo, $datado, $datado_calculo, $valor);
+unset($cfg, $database, $db, $movimentacao, $sql, $row, $movimentacao_arr, $movimentacao_item, $ano, $mes, $dia, $idmovimentacao, $tipo, $datado, $datado_calculo, $datado_calculo_redeem, $valor);

@@ -39,6 +39,8 @@ $investimento = new Investimento($db);
     <!-- Font Awesome -->
     <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
     <!-- Select Picker -->
+    <link rel="stylesheet" href="plugins/datepicker/css/datepicker.min.css">
+    <!-- Select Picker -->
     <link rel="stylesheet" href="plugins/bootstrap-select-1.13.14/css/bootstrap-select.min.css">
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="plugins/sweetalert2/sweetalert2.min.css">
@@ -116,61 +118,77 @@ $investimento = new Investimento($db);
                         <input type="hidden" name="conta" id="conta" value="<?= $conta = createCode(); ?>">
 
                         <div class="row form-group g-3 align-items-center">
-                            <div class="col-2">
+                            <div class="col-3">
                                 <label class="text text-danger" for="nome">Nome</label>
                             </div>
-                            <div class="col-10">
+                            <div class="col-9">
                                 <input type="text" name="nome" id="nome" minlength="2" maxlength="200"
                                     class="form-control" title="Informe o nome do usu&aacute;rio" placeholder="Nome completo"
                                     required>
                             </div>
                         </div>
+
                         <div class="row form-group g-3 align-items-center">
-                            <div class="col-2">
+                            <div class="col-3">
                                 <label class="text text-danger" for="documento">CPF</label>
                             </div>
                             <div class="col-5">
                                 <input type="text" name="documento" id="documento" minlength="11" maxlength="14"
                                     class="form-control" placeholder="CPF" required>
                             </div>
-                            <div class="col-5">
+                            <div class="col-4">
                                 <cite class="msg-documento"></cite>
                             </div>
                         </div>
+
                         <div class="row form-group g-3 align-items-center">
-                            <div class="col-2">
+                            <div class="col-3">
+                                <label class="text text-danger" for="nascimento">Nascimento</label>
+                            </div>
+                            <div class="col-9">
+                                <input type="text" name="nascimento" id="nascimento" minlength="10" maxlength="10"
+                                    class="form-control col-6 date-pick" title="Informe a data de nascimento" placeholder="Nascimento"
+                                    required>
+                            </div>
+                        </div>
+
+                        <div class="row form-group g-3 align-items-center">
+                            <div class="col-3">
                                 <label class="text text-danger" for="usuario">Usu&aacute;rio</label>
                             </div>
-                            <div class="col-10">
+                            <div class="col-9">
                                 <input type="text" name="usuario" id="usuario2" minlength="3" maxlength="10"
                                     class="form-control col-6" placeholder="Usu&aacute;rio" required>
                             </div>
                         </div>
+
                         <div class="row form-group g-3 align-items-center">
-                            <div class="col-2">
+                            <div class="col-3">
                                 <label class="text text-danger" for="senha">Senha</label>
                             </div>
-                            <div class="col-10">
+                            <div class="col-9">
                                 <input type="password" name="senha" id="senha2" minlength="4" maxlength="10"
                                     class="form-control col-6" autocomplete="senha" spellcheck="false" autocorrect="off"
                                     autocapitalize="off" placeholder="Senha" required>
                             </div>
                         </div>
+
                         <div class="row form-group g-3 align-items-center">
-                            <div class="col-2">
+                            <div class="col-3">
                                 <label class="text text-danger" for="senha_igual">Senha</label>
                             </div>
-                            <div class="col-10">
+                            <div class="col-9">
                                 <input type="password" name="senha_igual" id="senha3" minlength="4" maxlength="10"
                                     class="form-control col-6" autocomplete="senha" spellcheck="false" autocorrect="off"
                                     autocapitalize="off" placeholder="Confirme a senha" required>
                             </div>
                         </div>
+
                         <div class="row form-group g-3 align-items-center">
-                            <div class="col-2">
+                            <div class="col-3">
                                 <label class="text text-danger" for="email">E-mail</label>
                             </div>
-                            <div class="col-10">
+                            <div class="col-9">
                                 <input type="email" name="email" id="email" minlength="5" maxlength="100"
                                     class="form-control" placeholder="E-mail" required>
                             </div>
@@ -201,7 +219,10 @@ $investimento = new Investimento($db);
                                         echo '<option value="" selected>Selecione o investimento</option>';
 
                                         while($row = $sql->fetch(PDO::FETCH_OBJ)) {
-                                            echo '<option title="'.$row->tipo.' : ('.$row->tempo_resgate.' dias - '.$row->rendimento.'%)" data-subtext=": ('.$row->tempo_resgate.' dias - '.$row->rendimento.'%)" value="'.$row->idinvestimento.'">'.$row->tipo.'</option>';
+                                            $row->valor_minimo = number_format($row->valor_minimo, 2, '.', ',');
+                                            $row->valor_maximo = number_format($row->valor_maximo, 2, '.', ',');
+
+                                            echo '<option title="'.$row->tipo.' : ('.$row->tempo_resgate.' dias - '.$row->rendimento.'% | Min: R$'.$row->valor_minimo.' - Max: R$'.$row->valor_maximo.')" data-subtext=": ('.$row->tempo_resgate.' dias - '.$row->rendimento.'% | Min: R$'.$row->valor_minimo.' - Max: R$'.$row->valor_maximo.')" value="'.$row->idinvestimento.'">'.$row->tipo.'</option>';
                                         }
                                     } else {
                                         echo '<option value="" selected>Nenhum investimento cadastrado</option>';
@@ -226,6 +247,8 @@ $investimento = new Investimento($db);
     <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Input Mask -->
     <script src="plugins/inputmask/jquery.inputmask.min.js"></script>
+    <!-- Date Picker -->
+    <script src="plugins/datepicker/js/datepicker.min.js"></script>
     <!-- Select Picker -->
     <script src="plugins/bootstrap-select-1.13.14/js/bootstrap-select.min.js"></script>
     <!-- SweetAlert2 -->
@@ -246,7 +269,19 @@ $investimento = new Investimento($db);
 
             // MASK
         
+            $('#nascimento').inputmask('99/99/9999');
             $('#documento').inputmask('999.999.999-99');
+
+            // DATEPICKER
+
+            
+            $('.date-pick').datepicker({
+                language: 'pt-BR',
+                format: "dd/mm/yyyy"
+            })/*.on('hide', function (e) {
+                let dt = e.target.value.split(' ');
+                location.href = "inicio&pick=1";
+            })*/;
 
             // CHECK CPF
 
@@ -338,6 +373,7 @@ $investimento = new Investimento($db);
                         conta: $('#conta').val(),
                         nome: $('#nome').val(),
                         documento: $('#documento').val(),
+                        nascimento: $('#nascimento').val(),
                         usuario,
                         senha,
                         email: $('#email').val(),
