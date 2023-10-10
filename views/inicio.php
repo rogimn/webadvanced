@@ -178,6 +178,7 @@ $prefix = '../';
             <!-- /.content-wrapper -->
 
             <!-- Modals -->
+            
             <div class="modal fade" id="modal-deposit">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -249,7 +250,7 @@ $prefix = '../';
                                 <input type="hidden" name="tipo" id="tipo_resgate" value="redeem">
                                 <input type="hidden" name="limite" id="saldo_resgate">
                                 <input type="hidden" name="valor_resgate" id="valor_resgate">
-                                <input type="hidden" name="monitor_conta" id="monitor_conta_redeem" value="false">
+                                <input type="hidden" name="monitor_conta" id="monitor_conta_redeem" value="2">
                                 
                                 <dl>
                                     <dt class="data-investiment"></dt>
@@ -286,6 +287,25 @@ $prefix = '../';
                     </div>
                 </div>
             </div>
+
+            <div class="modal fade" id="modal-finish">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">
+                                <span>Conta encerrada!</span>
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <span class="lead">O rendimento foi sacado.</span>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="../appLogout.php" class="btn btn-secondary btn-logout">Sair</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- /.Modals -->
 
             <?php include_once '../appFootBar.php' ?>
@@ -364,6 +384,8 @@ $prefix = '../';
                                 if (data[0].monitor == 0) {
                                     $('#modal-deposit').modal({backdrop: 'static', keyboard: false, show: true});
                                     $(".btn-deposit-close").addClass("invisible");
+                                } else if (data[0].monitor == 2) {
+                                    $('#modal-finish').modal({backdrop: 'static', keyboard: false, show: true});
                                 }
 
                                 // o tempo de resgate e o rendimento serão passados para sessions

@@ -91,9 +91,11 @@ if (empty($_POST['monitor_conta'])) {
     $conta->monitor = filter_input(INPUT_POST, 'monitor_conta', FILTER_DEFAULT);
 
     if ($conta->monitor == 'false') {
-        $conta->monitor = 0;
+        $conta->monitor = 0; // provavelmente nunca entrará aqui
     } else if ($conta->monitor == 'true') {
         $conta->monitor = 1;
+    } else {
+        $conta->monitor = 2; // fechar a conta
     }
 }
 
