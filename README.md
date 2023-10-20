@@ -1,10 +1,10 @@
 # Aplicação da Disciplina de Tópicos Avançados para Web
 
-### Foi desenvolvido em cima das tecnologias:
+### Proejto desenvolvido com uso das tecnologias:
 
-- Apache 2.4;
-- MariaDB(Mysql) v 11.1.2;
-- PHP v 7.4;
+- Apache v2.4;
+- MariaDB v11.1.2;
+- PHP v7.4;
 
 ### Passos:
 
